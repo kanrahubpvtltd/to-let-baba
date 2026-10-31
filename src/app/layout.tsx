@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     "Commercial shop rent",
   ],
   authors: [{ name: "To-Let Baba" }],
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/icon-192.png",
+    apple: "/icon-192.png",
+  },
   openGraph: {
     title: "To-Let Baba • Zero Brokerage Local Rentals in India",
     description:

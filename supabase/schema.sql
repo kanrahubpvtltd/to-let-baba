@@ -122,3 +122,15 @@ create policy "Public Access to Property Images"
 create policy "Anyone can upload Property Images"
   on storage.objects for insert
   with check ( bucket_id = 'property-images' );
+
+-- 8. Enable Realtime Broadcasting for all connected mobile devices
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables 
+    where pubname = 'supabase_realtime' and tablename = 'properties'
+  ) then
+    alter publication supabase_realtime add table public.properties;
+  end if;
+end$$;
+

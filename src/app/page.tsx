@@ -11,6 +11,8 @@ import {
   toggleRentedOutStatus,
   deletePropertyListing,
   getMyListingIds,
+  supabase,
+  isSupabaseConfigured,
 } from "@/lib/supabase";
 import { Header } from "@/components/Header";
 import { CategoryPills } from "@/components/CategoryPills";
@@ -77,6 +79,46 @@ export default function HomePage() {
   // Load My Listings IDs on mount
   useEffect(() => {
     setMyListingIds(getMyListingIds());
+  }, []);
+
+  // Realtime multi-device live sync:
+  // When ANY user in India posts, updates or deletes a listing from their mobile app,
+  // all other users who downloaded the app receive the update instantly!
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+    const client = supabase;
+
+    const channel = client
+      .channel("properties-realtime-sync")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "properties" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newProp = payload.new as Property;
+            setProperties((prev) => {
+              if (prev.some((p) => p.id === newProp.id)) return prev;
+              return [newProp, ...prev];
+            });
+            showNotification(
+              `🔔 New To-Let in ${newProp.city}: "${newProp.title.slice(0, 30)}..."`
+            );
+          } else if (payload.eventType === "UPDATE") {
+            const updatedProp = payload.new as Property;
+            setProperties((prev) =>
+              prev.map((p) => (p.id === updatedProp.id ? updatedProp : p))
+            );
+          } else if (payload.eventType === "DELETE") {
+            const oldId = payload.old.id;
+            setProperties((prev) => prev.filter((p) => p.id !== oldId));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      client.removeChannel(channel);
+    };
   }, []);
 
   const showNotification = (msg: string) => {
