@@ -1,0 +1,24 @@
+{
+  "name": "To-Let Baba - Zero Brokerage Local Rentals",
+  "short_name": "To-Let Baba",
+  "description": "Direct Owner to Tenant Local House, Flat, PG and Commercial Rentals in India with Zero Brokerage",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

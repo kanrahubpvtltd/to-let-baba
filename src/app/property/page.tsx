@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   MapPin,
@@ -33,9 +33,9 @@ import {
 import { Footer } from "@/components/Footer";
 import { PropertyCard } from "@/components/PropertyCard";
 
-export default function PropertyDetailsPage() {
-  const params = useParams();
-  const id = params?.id as string;
+function PropertyDetailsInner() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") || "";
 
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,10 @@ export default function PropertyDetailsPage() {
 
   useEffect(() => {
     async function loadData() {
-      if (!id) return;
+      if (!id) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       const data = await fetchPropertyById(id);
       setProperty(data);
@@ -557,5 +560,19 @@ export default function PropertyDetailsPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function PropertyPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <PropertyDetailsInner />
+    </Suspense>
   );
 }

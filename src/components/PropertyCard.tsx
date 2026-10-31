@@ -62,7 +62,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
     e.preventDefault();
     e.stopPropagation();
     if (typeof window !== "undefined") {
-      const url = `${window.location.origin}/property/${property.id}`;
+      const url = `${window.location.origin}/property?id=${property.id}`;
       if (navigator.share) {
         navigator.share({
           title: property.title,
@@ -93,7 +93,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
     >
       {/* Top Media Gallery Container */}
       <div className="relative aspect-[16/10] sm:aspect-[16/10] w-full bg-slate-100 overflow-hidden select-none">
-        <Link href={`/property/${property.id}`} className="block w-full h-full">
+        <Link href={`/property?id=${property.id}`} className="block w-full h-full">
           <Image
             src={images[currentImgIndex]}
             alt={property.title}
@@ -211,7 +211,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </div>
 
           {/* Title with link */}
-          <Link href={`/property/${property.id}`} className="block group/title">
+          <Link href={`/property?id=${property.id}`} className="block group/title">
             <h4 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-1 group-hover/title:text-amber-600 transition-colors">
               {property.title}
             </h4>
